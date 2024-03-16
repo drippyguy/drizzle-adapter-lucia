@@ -1,6 +1,6 @@
 import { eq, lte } from "drizzle-orm";
 
-import type { Adapter, DatabaseSession, DatabaseUser } from "lucia";
+import type { Adapter, DatabaseSession, DatabaseUser, UserId } from "lucia";
 import type { MySqlColumn, MySqlDatabase, MySqlTableWithColumns } from "drizzle-orm/mysql-core";
 import type { InferSelectModel } from "drizzle-orm";
 
@@ -24,7 +24,7 @@ export class DrizzleMySQLAdapter implements Adapter {
 		await this.db.delete(this.sessionTable).where(eq(this.sessionTable.id, sessionId));
 	}
 
-	public async deleteUserSessions(userId: string): Promise<void> {
+	public async deleteUserSessions(userId: UserId): Promise<void> {
 		await this.db.delete(this.sessionTable).where(eq(this.sessionTable.userId, userId));
 	}
 
@@ -46,7 +46,7 @@ export class DrizzleMySQLAdapter implements Adapter {
 		];
 	}
 
-	public async getUserSessions(userId: string): Promise<DatabaseSession[]> {
+	public async getUserSessions(userId: UserId): Promise<DatabaseSession[]> {
 		const result = await this.db
 			.select()
 			.from(this.sessionTable)
@@ -88,7 +88,7 @@ export type MySQLUserTable = MySqlTableWithColumns<{
 				tableName: any;
 				dataType: any;
 				columnType: any;
-				data: string;
+				data: UserId;
 				driverParam: any;
 				notNull: true;
 				hasDefault: boolean; // must be boolean instead of any to allow default values
@@ -140,7 +140,7 @@ export type MySQLSessionTable = MySqlTableWithColumns<{
 				enumValues: any;
 				tableName: any;
 				columnType: any;
-				data: string;
+				data: UserId;
 				driverParam: any;
 				hasDefault: false;
 				name: any;

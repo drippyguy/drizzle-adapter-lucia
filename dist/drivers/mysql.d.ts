@@ -1,4 +1,4 @@
-import type { Adapter, DatabaseSession, DatabaseUser } from "lucia";
+import type { Adapter, DatabaseSession, DatabaseUser, UserId } from "lucia";
 import type { MySqlColumn, MySqlDatabase, MySqlTableWithColumns } from "drizzle-orm/mysql-core";
 export declare class DrizzleMySQLAdapter implements Adapter {
     private db;
@@ -6,9 +6,9 @@ export declare class DrizzleMySQLAdapter implements Adapter {
     private userTable;
     constructor(db: MySqlDatabase<any, any, any>, sessionTable: MySQLSessionTable, userTable: MySQLUserTable);
     deleteSession(sessionId: string): Promise<void>;
-    deleteUserSessions(userId: string): Promise<void>;
+    deleteUserSessions(userId: UserId): Promise<void>;
     getSessionAndUser(sessionId: string): Promise<[session: DatabaseSession | null, user: DatabaseUser | null]>;
-    getUserSessions(userId: string): Promise<DatabaseSession[]>;
+    getUserSessions(userId: UserId): Promise<DatabaseSession[]>;
     setSession(session: DatabaseSession): Promise<void>;
     updateSessionExpiration(sessionId: string, expiresAt: Date): Promise<void>;
     deleteExpiredSessions(): Promise<void>;
@@ -21,7 +21,7 @@ export type MySQLUserTable = MySqlTableWithColumns<{
             tableName: any;
             dataType: any;
             columnType: any;
-            data: string;
+            data: UserId;
             driverParam: any;
             notNull: true;
             hasDefault: boolean;
@@ -63,7 +63,7 @@ export type MySQLSessionTable = MySqlTableWithColumns<{
             enumValues: any;
             tableName: any;
             columnType: any;
-            data: string;
+            data: UserId;
             driverParam: any;
             hasDefault: false;
             name: any;

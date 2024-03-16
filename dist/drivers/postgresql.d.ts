@@ -1,4 +1,4 @@
-import type { Adapter, DatabaseSession, DatabaseUser } from "lucia";
+import type { Adapter, DatabaseSession, DatabaseUser, UserId } from "lucia";
 import type { PgColumn, PgDatabase, PgTableWithColumns } from "drizzle-orm/pg-core";
 export declare class DrizzlePostgreSQLAdapter implements Adapter {
     private db;
@@ -6,9 +6,9 @@ export declare class DrizzlePostgreSQLAdapter implements Adapter {
     private userTable;
     constructor(db: PgDatabase<any, any, any>, sessionTable: PostgreSQLSessionTable, userTable: PostgreSQLUserTable);
     deleteSession(sessionId: string): Promise<void>;
-    deleteUserSessions(userId: string): Promise<void>;
+    deleteUserSessions(userId: UserId): Promise<void>;
     getSessionAndUser(sessionId: string): Promise<[session: DatabaseSession | null, user: DatabaseUser | null]>;
-    getUserSessions(userId: string): Promise<DatabaseSession[]>;
+    getUserSessions(userId: UserId): Promise<DatabaseSession[]>;
     setSession(session: DatabaseSession): Promise<void>;
     updateSessionExpiration(sessionId: string, expiresAt: Date): Promise<void>;
     deleteExpiredSessions(): Promise<void>;
@@ -21,7 +21,7 @@ export type PostgreSQLUserTable = PgTableWithColumns<{
             tableName: any;
             dataType: any;
             columnType: any;
-            data: string;
+            data: UserId;
             driverParam: any;
             notNull: true;
             hasDefault: boolean;
@@ -63,7 +63,7 @@ export type PostgreSQLSessionTable = PgTableWithColumns<{
             enumValues: any;
             tableName: any;
             columnType: any;
-            data: string;
+            data: UserId;
             driverParam: any;
             hasDefault: false;
             name: any;
